@@ -1,6 +1,11 @@
+import Game from './tictac.js'
+
 function App() {
   return (
-    <div>App</div>
+    <div>
+      <p>aaaaaa</p>
+      <Game />
+    </div>
   )
 }
 
