@@ -1,21 +1,23 @@
-import { useSnapshot } from 'valtio'
+import { useSnapshot, proxy } from 'valtio'
 
 export function useStore<T extends object>(store: T) {
   const snapshot = useSnapshot(store)
-  return new Proxy(snapshot, {
-    set(obj, prop, value, receiver) {
-      store[prop as keyof typeof store] = value
+  return new Proxy(store, {
+    set(target, prop, value, receiver) {
+      Reflect.set(target, prop, value, receiver)
       return true
-    },
+    }, 
     get: function (target, prop, receiver) {
-      if (typeof Reflect.get(target, prop, receiver) === 'function') {
+      const value = Reflect.get(snapshot, prop, receiver)
+       if (typeof value === 'function') {
         return function (...args: any) {
+          //Reflect.apply(target, target, argumentsList) 
           //@ts-ignore
-          return target[prop].apply(store, args)
+          return target[prop].apply(store, args) 
         }
       } else {
-        return target[prop as keyof typeof target]
-      }
+        return value
+      } 
     },
   })
 }

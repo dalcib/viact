@@ -1,4 +1,4 @@
-//import React, { memo } from 'react'
+import { memo } from 'react'
 //import ReactDOM from 'react-dom'
 import './styles.css'
 import { proxy} from 'valtio'
@@ -63,14 +63,14 @@ class TicTac {
 
 const store = proxy(new TicTac())
 
-const Square = ({ i }) => {
+const Square = memo(({ i }) => {
   const snapshot = useStore(store)
   return (
     <button className="square" onClick={() => snapshot.selectSquare(i)}>
       {snapshot.currentSquares[i]}
     </button>
   )
-}
+})
 
 function Game() {
   const snapshot = useStore(store)
