@@ -63,8 +63,12 @@ class TicTac {
 
 const store = proxy(new TicTac())
 
-const Square = memo(({ i }) => {
-  const snapshot = useStore(store)
+function useState() {
+  return useStore(store)
+}
+
+const Square = memo(({ i }: {i:number}) => {
+  const snapshot = useState()
   return (
     <button className="square" onClick={() => snapshot.selectSquare(i)}>
       {snapshot.currentSquares[i]}
