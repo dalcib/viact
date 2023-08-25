@@ -3,18 +3,14 @@ import { useSnapshot, proxy } from 'valtio'
 export function useStore<T extends object>(store: T) {
   const snapshot = useSnapshot(store)
   return new Proxy(store, {
-    set(target, prop, value, receiver) {
-      Reflect.set(target, prop, value, receiver)
+    set(target, prop, value) {
+      Reflect.set(target, prop, value)
       return true
     }, 
-    get: function (target, prop, receiver) {
-      const value = Reflect.get(snapshot, prop, receiver)
+    get(target, prop) {
+      const value = Reflect.get(snapshot, prop)
        if (typeof value === 'function') {
-        return function (...args: any) {
-          //Reflect.apply(target, target, argumentsList) 
-          //@ts-ignore
-          return target[prop].apply(store, args) 
-        }
+        return  (...args: any) => value.apply(target, args) 
       } else {
         return value
       } 
